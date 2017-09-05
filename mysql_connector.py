@@ -207,8 +207,8 @@ class MysqlConnector(BaseConnector):
         my_query = param['query']
         record_limit = self._query_record_limit
 
-        if 'override_limit' in param:
-            if param['override_limit'] == 'true':
+        if 'ignore_limit' in param:
+            if param['ignore_limit'] == 'true':
                 record_limit = None
 
         if record_limit:

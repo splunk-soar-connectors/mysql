@@ -269,8 +269,8 @@
                     "default": "",
                     "order": 0
                 },
-		"override_limit": {
-		    "description": "Query record limit override",
+		"ignore_limit": {
+		    "description": "Ignore query record limit",
 		    "data_type": "boolean",
 		    "required": false,
 		    "primary": false,
@@ -303,7 +303,7 @@
                     ]
                 },
 		{
-		    "data_path": "action_result.parameter.override_limit",
+		    "data_path": "action_result.parameter.ignore_limit",
 		    "data_type": "boolean"
 		},
                 {
