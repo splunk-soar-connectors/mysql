@@ -6,11 +6,8 @@
     "product_vendor": "Phantom",
     "logo": "mysql.png",
     "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "mysql_connector_python",
-                "input_file": "wheels/mysql_connector_python-2.1.7-cp27-cp27mu-linux_x86_64.whl"
-            }
+        "pypi": [
+            {"module": "mysql-connector-python-rf==2.0.4"}
         ]
     },
     "product_name": "MySQL",
@@ -56,14 +53,14 @@
             "default": "",
             "order": 3
         },
-	"query_record_limit": {
-	    "description": "Query Record Limit",
-	    "data_type": "string",
-	    "required": false,
-	    "value_list": ["10", "100", "1000"],
-	    "default": "1000",
-	    "order": 4
-	}    
+        "query_record_limit": {
+            "description": "Query Record Limit",
+            "data_type": "string",
+            "required": false,
+            "value_list": ["10", "100", "1000"],
+            "default": "1000",
+            "order": 4
+        }
     },
     "actions": [
         {
@@ -78,9 +75,9 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "describe table",
-            "identifier": "describe_table",
-            "description": "Describe the structure of the table",
+            "action": "list columns",
+            "identifier": "list_columns",
+            "description": "List the columns of a table",
             "verbose": "Describes the structure of a table in the database by displaying information about its columns.",
             "type": "generic",
             "read_only": false,
@@ -110,9 +107,8 @@
                     "example_values": [
                         "auto_increment"
                     ],
-		    "column_name": "extra",
-		    "column_order": 4
-		    
+                    "column_name": "extra",
+                    "column_order": 4
                 },
                 {
                     "data_path": "action_result.data.*.Field",
@@ -120,9 +116,8 @@
                     "example_values": [
                         "idcontact"
                     ],
-		    "column_name": "field",
-		    "column_order": 0
-
+                    "column_name": "field",
+                    "column_order": 0
                 },
                 {
                     "data_path": "action_result.data.*.Key",
@@ -130,8 +125,8 @@
                     "example_values": [
                         "PRI"
                     ],
-		    "column_name": "key",
-		    "column_order": 2
+                    "column_name": "key",
+                    "column_order": 2
                 },
                 {
                     "data_path": "action_result.data.*.Null",
@@ -139,8 +134,8 @@
                     "example_values": [
                         "NO"
                     ],
-		    "column_name": "null",
-		    "column_order": 3
+                    "column_name": "null",
+                    "column_order": 3
                 },
                 {
                     "data_path": "action_result.data.*.Type",
@@ -148,8 +143,8 @@
                     "example_values": [
                         "int(11)"
                     ],
-		    "column_name": "type",
-		    "column_order": 1
+                    "column_name": "type",
+                    "column_order": 1
                 },
                 {
                     "data_path": "action_result.message",
@@ -193,10 +188,10 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "show tables",
-            "identifier": "show_tables",
-            "description": "Show tables",
-            "verbose": "Show the tables in the database.",
+            "action": "list tables",
+            "identifier": "list_tables",
+            "description": "List tables",
+            "verbose": "List the tables in the database.",
             "type": "generic",
             "read_only": false,
             "parameters": {},
@@ -214,8 +209,8 @@
                     "example_values": [
                         "contact"
                     ],
-		    "column_name": "name",
-		    "column_order": 0
+                    "column_name": "name",
+                    "column_order": 0
                 },
                 {
                     "data_path": "action_result.message",
@@ -269,15 +264,15 @@
                     "default": "",
                     "order": 0
                 },
-		"ignore_limit": {
-		    "description": "Ignore query record limit",
-		    "data_type": "boolean",
-		    "required": false,
-		    "primary": false,
-		    "contains": [],
-		    "value_list": [],
-		    "default": false,
-		    "order": 1
+                "ignore_limit": {
+                    "description": "Ignore query record limit",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "default": false,
+                    "order": 1
                 }
             },
             "output": [
@@ -302,10 +297,10 @@
                         "select * from contact where first_name = 'Tony'"
                     ]
                 },
-		{
-		    "data_path": "action_result.parameter.ignore_limit",
-		    "data_type": "boolean"
-		},
+                {
+                    "data_path": "action_result.parameter.ignore_limit",
+                    "data_type": "boolean"
+                },
                 {
                     "data_path": "action_result.summary.total_rows",
                     "data_type": "numeric",
@@ -327,17 +322,17 @@
                         1
                     ]
                 },
-		{
-		    "data_path": "action_result.data.*",
-		    "data_type": "string"
-		}		
+                {
+                    "data_path": "action_result.data.*",
+                    "data_type": "string"
+                }
             ],
             "render": {
                 "type": "custom",
-		"width": 10,
-		"height": 5,
-		"view": "mysql_view.display_query_results",
-		"title": "Query Results"
+                "width": 10,
+                "height": 5,
+                "view": "mysql_view.display_query_results",
+                "title": "Query Results"
             },
             "versions": "EQ(*)"
         }
