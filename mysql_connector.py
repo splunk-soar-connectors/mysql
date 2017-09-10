@@ -1,7 +1,7 @@
 # --
 # File: mysql_connector.py
 #
-# Copyright (c) Phantom Cyber Corporation, 2016-2017
+# Copyright (c) Phantom Cyber Corporation, 2017
 #
 # This unpublished material is proprietary to Phantom Cyber.
 # All rights reserved. The methods and
@@ -118,7 +118,7 @@ class MysqlConnector(BaseConnector):
         my_query = param.get('query')
         record_limit = self._query_record_limit
 
-        if param.get('ignore_limit') == 'true':
+        if param.get('ignore_limit'):
             record_limit = None
 
         if record_limit:
