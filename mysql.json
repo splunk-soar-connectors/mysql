@@ -1,0 +1,340 @@
+{
+    "appid": "1dda0678-eaca-4af2-b140-94248dd62088",
+    "name": "MySQL",
+    "description": "This app supports several query actions against a MySQL database",
+    "type": "information",
+    "product_vendor": "Phantom",
+    "logo": "mysql.png",
+    "pip_dependencies": {
+        "pypi": [
+            {"module": "mysql-connector-python-rf==2.0.4"}
+        ]
+    },
+    "product_name": "MySQL",
+    "product_version_regex": ".*",
+    "publisher": "Phantom",
+    "license": "Copyright Phantom 2017",
+    "app_version": "1.0.0",
+    "utctime_updated": "2017-08-29T01:06:38.467923Z",
+    "package_name": "phantom_mysql",
+    "main_module": "mysql_connector.pyc",
+    "min_phantom_version": "3.0.247",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "host": {
+            "description": "Hostname or IP address",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 0
+        },
+        "username": {
+            "description": "Username",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 1
+        },
+        "password": {
+            "description": "Password",
+            "data_type": "password",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 2
+        },
+        "database": {
+            "description": "Database Name",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 3
+        },
+        "query_record_limit": {
+            "description": "Query Record Limit",
+            "data_type": "string",
+            "required": false,
+            "value_list": ["10", "100", "1000"],
+            "default": "1000",
+            "order": 4
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list columns",
+            "identifier": "list_columns",
+            "description": "List the columns of a table",
+            "verbose": "Describes the structure of a table in the database by displaying information about its columns.",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "table_name": {
+                    "description": "Name of table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.Extra",
+                    "data_type": "string",
+                    "example_values": [
+                        "auto_increment"
+                    ],
+                    "column_name": "extra",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.Field",
+                    "data_type": "string",
+                    "example_values": [
+                        "idcontact"
+                    ],
+                    "column_name": "field",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.Key",
+                    "data_type": "string",
+                    "example_values": [
+                        "PRI"
+                    ],
+                    "column_name": "key",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.Null",
+                    "data_type": "string",
+                    "example_values": [
+                        "NO"
+                    ],
+                    "column_name": "null",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.Type",
+                    "data_type": "string",
+                    "example_values": [
+                        "int(11)"
+                    ],
+                    "column_name": "type",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 4"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.table_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "contact"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_rows",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list tables",
+            "identifier": "list_tables",
+            "description": "List tables",
+            "verbose": "List the tables in the database.",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.Tables_in_testdb",
+                    "data_type": "string",
+                    "example_values": [
+                        "contact"
+                    ],
+                    "column_name": "name",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_rows",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "run query",
+            "identifier": "run_query",
+            "description": "Run a query",
+            "verbose": "Run a query against a table or tables in the database.",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "query": {
+                    "description": "Query string",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0
+                },
+                "ignore_limit": {
+                    "description": "Ignore query record limit",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "default": false,
+                    "order": 1
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 6"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string",
+                    "example_values": [
+                        "select * from contact where first_name = 'Tony'"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ignore_limit",
+                    "data_type": "boolean"
+                },
+                {
+                    "data_path": "action_result.summary.total_rows",
+                    "data_type": "numeric",
+                    "example_values": [
+                        6
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*",
+                    "data_type": "string"
+                }
+            ],
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "mysql_view.display_query_results",
+                "title": "Query Results"
+            },
+            "versions": "EQ(*)"
+        }
+    ]
+}
