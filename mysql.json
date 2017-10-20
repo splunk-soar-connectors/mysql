@@ -3,8 +3,8 @@
     "name": "MySQL",
     "description": "This app supports several query actions against a MySQL database",
     "type": "information",
-    "product_vendor": "Phantom",
-    "logo": "mysql.png",
+    "product_vendor": "Oracle Corporation",
+    "logo": "oracle.png",
     "pip_dependencies": {
         "pypi": [
             {
