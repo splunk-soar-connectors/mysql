@@ -1,3 +1,4 @@
 [submodule "mysql_python"]
 	path = mysql_python
 	url = ssh://git@prod-bb-1.phantom.local:7999/per/mysql_python.git
+	ignore = dirty
