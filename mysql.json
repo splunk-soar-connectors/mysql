@@ -6,11 +6,9 @@
     "product_vendor": "Oracle Corporation",
     "logo": "oracle.png",
     "pip_dependencies": {
-        "pypi": [
-            {
-                "module": "mysql-connector-python-rf==2.0.4"
-            }
-        ]
+        "wheel": [
+          {"module": "mysql-connector-python", "input_file": "mysql_python/mysql-connector-python-rf-2.0.4.tar.gz"}
+      ]
     },
     "product_name": "MySQL",
     "product_version_regex": ".*",
@@ -93,7 +91,7 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": [],
+                    "contains": ["mysql table name"],
                     "value_list": [],
                     "default": "",
                     "order": 0
@@ -162,6 +160,7 @@
                 {
                     "data_path": "action_result.parameter.table_name",
                     "data_type": "string",
+                    "contains": ["mysql table name"],
                     "example_values": [
                         "contact"
                     ]
@@ -215,6 +214,7 @@
                     "example_values": [
                         "contact"
                     ],
+                    "contains": ["mysql table name"],
                     "column_name": "name",
                     "column_order": 0
                 },
@@ -265,7 +265,7 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": [],
+                    "contains": ["sql query"],
                     "value_list": [],
                     "default": "",
                     "order": 0
@@ -275,7 +275,6 @@
                     "data_type": "boolean",
                     "required": false,
                     "primary": false,
-                    "contains": [],
                     "value_list": [],
                     "default": false,
                     "order": 1
@@ -299,6 +298,7 @@
                 {
                     "data_path": "action_result.parameter.query",
                     "data_type": "string",
+                    "contains": ["sql query"],
                     "example_values": [
                         "select * from contact where first_name = 'Tony'"
                     ]
