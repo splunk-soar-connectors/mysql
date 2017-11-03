@@ -7,15 +7,18 @@
     "logo": "oracle.png",
     "pip_dependencies": {
         "wheel": [
-          {"module": "mysql-connector-python", "input_file": "mysql_python/mysql-connector-python-rf-2.0.4.tar.gz"}
-      ]
+            {
+                "module": "mysql-connector-python",
+                "input_file": "mysql_python/mysql-connector-python-rf-2.0.4.tar.gz"
+            }
+        ]
     },
     "product_name": "MySQL",
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright Phantom 2017",
-    "app_version": "1.0.2",
-    "utctime_updated": "2017-10-21T00:55:16.000000Z",
+    "app_version": "1.0.3",
+    "utctime_updated": "2017-11-03T20:24:51.000000Z",
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.pyc",
     "min_phantom_version": "3.0.247",
@@ -91,7 +94,9 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": ["mysql table name"],
+                    "contains": [
+                        "mysql table name"
+                    ],
                     "value_list": [],
                     "default": "",
                     "order": 0
@@ -160,7 +165,9 @@
                 {
                     "data_path": "action_result.parameter.table_name",
                     "data_type": "string",
-                    "contains": ["mysql table name"],
+                    "contains": [
+                        "mysql table name"
+                    ],
                     "example_values": [
                         "contact"
                     ]
@@ -214,7 +221,9 @@
                     "example_values": [
                         "contact"
                     ],
-                    "contains": ["mysql table name"],
+                    "contains": [
+                        "mysql table name"
+                    ],
                     "column_name": "name",
                     "column_order": 0
                 },
@@ -265,7 +274,9 @@
                     "data_type": "string",
                     "required": true,
                     "primary": true,
-                    "contains": ["sql query"],
+                    "contains": [
+                        "sql query"
+                    ],
                     "value_list": [],
                     "default": "",
                     "order": 0
@@ -298,7 +309,9 @@
                 {
                     "data_path": "action_result.parameter.query",
                     "data_type": "string",
-                    "contains": ["sql query"],
+                    "contains": [
+                        "sql query"
+                    ],
                     "example_values": [
                         "select * from contact where first_name = 'Tony'"
                     ]
