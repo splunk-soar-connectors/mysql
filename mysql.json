@@ -21,7 +21,7 @@
     "utctime_updated": "2017-11-03T20:24:51.000000Z",
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.pyc",
-    "min_phantom_version": "3.0.247",
+    "min_phantom_version": "3.0.251",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "host": {
