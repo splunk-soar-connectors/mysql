@@ -129,10 +129,15 @@ class MysqlConnector(BaseConnector):
             record_limit = None
 
         if record_limit:
-            my_query = my_query.strip(';') + " limit " + record_limit
+            my_query = my_query.strip(';').decode('utf-8') + u" limit " + record_limit
 
         cursor = self._my_connection.cursor(dictionary=True)
-        cursor.execute(my_query)
+        try:
+            cursor.execute(my_query)
+        except Exception as e:
+            return action_result.set_status(
+                phantom.APP_ERROR, "Unable running query", e
+            )
 
         for row in cursor:
             action_result.add_data(row)
