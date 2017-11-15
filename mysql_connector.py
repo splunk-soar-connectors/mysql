@@ -19,6 +19,7 @@ from phantom.action_result import ActionResult
 
 # Usage of the consts file is recommended
 # from mysql_consts import *
+import re
 import json
 import mysql.connector
 
@@ -73,9 +74,16 @@ class MysqlConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         my_table = param['table_name']
+        if not re.match(r'^[a-zA-Z0-9$_]+$', my_table):
+            return action_result.set_status(phantom.APP_ERROR, "Table name did not pass validation")
         query = "DESCRIBE {0};".format(my_table)
         cursor = self._my_connection.cursor(dictionary=True)
-        cursor.execute(query)
+        try:
+            cursor.execute(query)
+        except Exception as e:
+            return action_result.set_status(
+                phantom.APP_ERROR, "Unable to list columns", e
+            )
 
         for row in cursor:
             action_result.add_data(row)
@@ -97,7 +105,6 @@ class MysqlConnector(BaseConnector):
         query = "SHOW TABLES;"
         cursor = self._my_connection.cursor(dictionary=True)
         cursor.execute(query)
-
         for row in cursor:
             action_result.add_data(row)
 
