@@ -203,7 +203,12 @@ class MysqlConnector(BaseConnector):
                                                           host=config['host'])
             self._my_connection.autocommit = True
         except mysql.connector.Error as err:
-            self.set_status(phantom.APP_ERROR, "db login error", err)
+            if self.get_action_identifier() == "test_connectivity":
+                self.save_progress("db login error")
+                self.save_progress(str(err))
+                self.set_status(phantom.APP_ERROR, "Test Connectivity Failed")
+            else:
+                self.set_status(phantom.APP_ERROR, "db login error", err)
             return False
         self.save_progress("Database connection established")
         return phantom.APP_SUCCESS
