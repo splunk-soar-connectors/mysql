@@ -28,16 +28,12 @@
             "description": "Hostname or IP address",
             "data_type": "string",
             "required": true,
-            "value_list": [],
-            "default": "",
             "order": 0
         },
         "username": {
             "description": "Username",
             "data_type": "string",
             "required": true,
-            "value_list": [],
-            "default": "",
             "order": 1
         },
         "password": {
@@ -50,8 +46,6 @@
             "description": "Database Name",
             "data_type": "string",
             "required": true,
-            "value_list": [],
-            "default": "",
             "order": 3
         },
         "query_record_limit": {
@@ -95,8 +89,6 @@
                     "contains": [
                         "mysql table name"
                     ],
-                    "value_list": [],
-                    "default": "",
                     "order": 0
                 }
             },
@@ -121,7 +113,7 @@
                     "data_path": "action_result.data.*.Field",
                     "data_type": "string",
                     "example_values": [
-                        "idcontact"
+                        "id"
                     ],
                     "column_name": "field",
                     "column_order": 0
@@ -154,10 +146,14 @@
                     "column_order": 1
                 },
                 {
+                    "data_path": "action_result.data.*.Default",
+                    "data_type": "string"
+                }
+                {
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Total rows: 4"
+                        "Total rows: 4",
                     ]
                 },
                 {
@@ -167,14 +163,15 @@
                         "mysql table name"
                     ],
                     "example_values": [
-                        "contact"
+                        "contact",
                     ]
                 },
                 {
                     "data_path": "action_result.summary.total_rows",
                     "data_type": "numeric",
                     "example_values": [
-                        4
+                        4,
+                        5
                     ]
                 },
                 {
@@ -190,7 +187,7 @@
                     "example_values": [
                         1
                     ]
-                }
+                },
             ],
             "render": {
                 "type": "table"
