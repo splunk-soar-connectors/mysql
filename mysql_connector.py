@@ -136,7 +136,7 @@ class MysqlConnector(BaseConnector):
             cursor.execute(my_query)
         except Exception as e:
             return action_result.set_status(
-                phantom.APP_ERROR, "Unable running query", e
+                phantom.APP_ERROR, "Unable to run query", e
             )
 
         for row in cursor:
