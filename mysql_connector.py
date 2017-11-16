@@ -19,6 +19,7 @@ from phantom.action_result import ActionResult
 
 # Usage of the consts file is recommended
 # from mysql_consts import *
+import re
 import json
 import mysql.connector
 
@@ -73,9 +74,16 @@ class MysqlConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         my_table = param['table_name']
+        if not re.match(r'^[a-zA-Z0-9$_]+$', my_table):
+            return action_result.set_status(phantom.APP_ERROR, "Table name did not pass validation")
         query = "DESCRIBE {0};".format(my_table)
         cursor = self._my_connection.cursor(dictionary=True)
-        cursor.execute(query)
+        try:
+            cursor.execute(query)
+        except Exception as e:
+            return action_result.set_status(
+                phantom.APP_ERROR, "Unable to list columns", e
+            )
 
         for row in cursor:
             action_result.add_data(row)
@@ -97,7 +105,6 @@ class MysqlConnector(BaseConnector):
         query = "SHOW TABLES;"
         cursor = self._my_connection.cursor(dictionary=True)
         cursor.execute(query)
-
         for row in cursor:
             action_result.add_data(row)
 
@@ -122,10 +129,15 @@ class MysqlConnector(BaseConnector):
             record_limit = None
 
         if record_limit:
-            my_query = my_query.strip(';') + " limit " + record_limit
+            my_query = my_query.strip(';').decode('utf-8') + u" limit " + record_limit
 
         cursor = self._my_connection.cursor(dictionary=True)
-        cursor.execute(my_query)
+        try:
+            cursor.execute(my_query)
+        except Exception as e:
+            return action_result.set_status(
+                phantom.APP_ERROR, "Unable to run query", e
+            )
 
         for row in cursor:
             action_result.add_data(row)
@@ -191,7 +203,12 @@ class MysqlConnector(BaseConnector):
                                                           host=config['host'])
             self._my_connection.autocommit = True
         except mysql.connector.Error as err:
-            self.set_status(phantom.APP_ERROR, "db login error", err)
+            if self.get_action_identifier() == "test_connectivity":
+                self.save_progress("db login error")
+                self.save_progress(str(err))
+                self.set_status(phantom.APP_ERROR, "Test Connectivity Failed")
+            else:
+                self.set_status(phantom.APP_ERROR, "db login error", err)
             return False
         self.save_progress("Database connection established")
         return phantom.APP_SUCCESS
