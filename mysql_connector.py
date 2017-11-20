@@ -20,6 +20,7 @@ from phantom.action_result import ActionResult
 # Usage of the consts file is recommended
 # from mysql_consts import *
 import re
+import csv
 import json
 import mysql.connector
 
@@ -43,7 +44,6 @@ class MysqlConnector(BaseConnector):
         # modify this as you deem fit.
         self._base_url = None
         self._my_connection = None
-        self._query_record_limit = None
 
     def _handle_test_connectivity(self, param):
 
@@ -113,8 +113,13 @@ class MysqlConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _handle_run_query(self, param):
+    def _get_format_vars(self, param):
+        format_vars = param.get('format_vars')
+        if format_vars:
+            format_vars = csv.reader([format_vars], quotechar='"', skipinitialspace=True).next()
+        return format_vars
 
+    def _handle_run_query(self, param):
         self.save_progress("In action handler for: {0}".format(
             self.get_action_identifier()))
 
@@ -123,17 +128,11 @@ class MysqlConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         my_query = param.get('query')
-        record_limit = self._query_record_limit
-
-        if param.get('ignore_limit'):
-            record_limit = None
-
-        if record_limit:
-            my_query = my_query.strip(';').decode('utf-8') + u" limit " + record_limit
+        format_vars = self._get_format_vars(param)
 
         cursor = self._my_connection.cursor(dictionary=True)
         try:
-            cursor.execute(my_query)
+            cursor.execute(my_query, format_vars)
         except Exception as e:
             return action_result.set_status(
                 phantom.APP_ERROR, "Unable to run query", e
@@ -141,6 +140,14 @@ class MysqlConnector(BaseConnector):
 
         for row in cursor:
             action_result.add_data(row)
+
+        if not param.get('no_commit', False):
+            try:
+                self._my_connection.commit()
+            except Exception as e:
+                return action_result.set_status(
+                    phantom.APP_ERROR, "Unable to commit changes", e
+                )
 
         summary = action_result.update_summary({})
 
@@ -192,16 +199,13 @@ class MysqlConnector(BaseConnector):
         # Optional values should use the .get() function
         # optional_config_name = config.get('optional_config_name')
 
-        if 'query_record_limit' in config:
-            self._query_record_limit = config['query_record_limit']
-
         self.save_progress("Starting db initialization")
         try:
             self._my_connection = mysql.connector.connect(user=config['username'],
                                                           password=config['password'],
                                                           database=config['database'],
                                                           host=config['host'])
-            self._my_connection.autocommit = True
+            # self._my_connection.autocommit = True
         except mysql.connector.Error as err:
             if self.get_action_identifier() == "test_connectivity":
                 self.save_progress("db login error")
