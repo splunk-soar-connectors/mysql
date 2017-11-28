@@ -45,6 +45,10 @@ class MysqlConnector(BaseConnector):
         self._base_url = None
         self._my_connection = None
 
+    def _cleanup_row_values(self, row):
+        # The MySQL column values is supposed to be a bytearray as opposed to a string
+        return {k: v.decode('utf-8') if type(v) == bytearray else v for k, v in row.iteritems()}
+
     def _handle_test_connectivity(self, param):
 
         # Add an action result object to self (BaseConnector)
@@ -86,7 +90,7 @@ class MysqlConnector(BaseConnector):
             )
 
         for row in cursor:
-            action_result.add_data(row)
+            action_result.add_data(self._cleanup_row_values(row))
 
         summary = action_result.update_summary({})
         summary['total_rows'] = cursor.rowcount
@@ -106,7 +110,7 @@ class MysqlConnector(BaseConnector):
         cursor = self._my_connection.cursor(dictionary=True)
         cursor.execute(query)
         for row in cursor:
-            action_result.add_data(row)
+            action_result.add_data(self._cleanup_row_values(row))
 
         summary = action_result.update_summary({})
         summary['total_rows'] = cursor.rowcount
@@ -139,7 +143,7 @@ class MysqlConnector(BaseConnector):
             )
 
         for row in cursor:
-            action_result.add_data(row)
+            action_result.add_data(self._cleanup_row_values(row))
 
         if not param.get('no_commit', False):
             try:
