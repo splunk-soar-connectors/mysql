@@ -157,7 +157,7 @@ class MysqlConnector(BaseConnector):
         else:
             summary['total_rows'] = 0
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully ran query")
 
     def handle_action(self, param):
 
