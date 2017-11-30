@@ -116,7 +116,7 @@ class MysqlConnector(BaseConnector):
             # There should only be one column per row, but let's double check first
             if len(row) == 1:
                 row = dict(table_name=next(row.itervalues()))
-            action_result.add_data(self._cleanup_row_values(row))
+            action_result.add_data(row)
 
         summary = action_result.update_summary({})
         summary['total_rows'] = cursor.rowcount
