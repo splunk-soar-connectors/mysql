@@ -197,7 +197,7 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.Tables_in_testdb",
+                    "data_path": "action_result.data.*.table_name",
                     "data_type": "string",
                     "example_values": [
                         "contact"

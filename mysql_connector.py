@@ -110,6 +110,12 @@ class MysqlConnector(BaseConnector):
         cursor = self._my_connection.cursor(dictionary=True)
         cursor.execute(query)
         for row in cursor:
+            row = self._cleanup_row_values(row)
+            # Rename column name so it will be the same for every asset
+            #  running the app
+            # There should only be one column per row, but let's double check first
+            if len(row) == 1:
+                row = dict(table_name=next(row.itervalues()))
             action_result.add_data(self._cleanup_row_values(row))
 
         summary = action_result.update_summary({})
