@@ -1,7 +1,7 @@
 {
     "appid": "1dda0678-eaca-4af2-b140-94248dd62088",
     "name": "MySQL",
-    "description": "This app supports several actions against a MySQL database",
+    "description": "This app supports investigative actions against a MySQL database",
     "type": "information",
     "product_vendor": "Oracle Corporation",
     "logo": "oracle.png",
