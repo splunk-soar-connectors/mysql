@@ -4,7 +4,8 @@
     "description": "This app supports several query actions against a MySQL database",
     "type": "information",
     "product_vendor": "Oracle Corporation",
-    "logo": "oracle.png",
+    "logo": "logo_mysql.svg",
+    "logo_dark": "logo_mysql_dark.svg",
     "pip_dependencies": {
         "wheel": [
             {
