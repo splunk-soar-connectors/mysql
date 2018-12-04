@@ -1,4 +1,4 @@
 [submodule "mysql_python"]
 	path = mysql_python
-	url = ssh://git@bitbucket.phantom.us:7999/per/phmysql.git
+	url = ssh://git@bitbucket.phantom.us:7999/pa/phmysql.git
 	ignore = dirty
