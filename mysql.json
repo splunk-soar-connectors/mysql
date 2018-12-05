@@ -17,12 +17,12 @@
     "product_name": "MySQL",
     "product_version_regex": ".*",
     "publisher": "Phantom",
-    "license": "Copyright (c) Phantom Cyber Corporation, 2017",
-    "app_version": "1.0.19",
-    "utctime_updated": "2017-12-28T22:37:55.000000Z",
+    "license": "Copyright (c) 2017-2018 Splunk Inc.",
+    "app_version": "1.0.20",
+    "utctime_updated": "2018-12-04T02:14:24.000000Z",
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.pyc",
-    "min_phantom_version": "3.0.251",
+    "min_phantom_version": "3.5.210",
     "app_wizard_version": "1.0.0",
     "configuration": {
         "host": {
