@@ -1,9 +1,34 @@
 <!-- File: readme.html
-  Copyright (c) 2017-2018 Splunk Inc.
+  Copyright (c) 2017-2021 Splunk Inc.
 
   SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
   without a valid written license from Splunk Inc. is PROHIBITED.
 -->
 <p>
 This app will ignore the HTTP_PROXY and HTTPS_PROXY environment variables, as it does not use HTTP to connect to the database.
+<br>
+Below are the ports used by MySQL Server.
+<table>
+  <tr class=plain>
+    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Name</th>
+    <th>Port</th>
+    <th>Transport Protocol</th>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>MySQL(mysql)</b></td>
+    <td>3306</td>
+    <td>tcp</td>
+  </tr>
+  <tr>
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>MySQL(mysql)</b></td>
+    <td>3306</td>
+    <td>udp</td>
+  </tr>
+</table>
+<br>
+<h2>SDK and SDK Licensing details for the app</h2>
+  <p>
+    <h3>mysql-connector-python</h3>
+    This app uses the mysql-connector-python module, which is licensed under GPLv2 License, Copyright (c) Oracle and/or its affiliates.
+  </p>
 </p>
