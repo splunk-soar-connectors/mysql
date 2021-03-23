@@ -9,20 +9,24 @@
     "pip_dependencies": {
         "wheel": [
             {
-                "module": "mysql-connector-python",
-                "input_file": "mysql_python/mysql-connector-python-rf-2.0.4.tar.gz"
+                "module": "pymysql",
+                "input_file": "mysql_python/PyMySQL-1.0.2.tar.gz"
             }
         ]
     },
     "product_name": "MySQL",
     "product_version_regex": ".*",
-    "publisher": "Phantom",
-    "license": "Copyright (c) 2017-2018 Splunk Inc.",
-    "app_version": "1.0.20",
-    "utctime_updated": "2018-12-04T02:14:24.000000Z",
+    "publisher": "Splunk",
+    "license": "Copyright (c) 2017-2021 Splunk Inc.",
+    "app_version": "2.0.3",
+    "utctime_updated": "2021-03-23T04:35:46.000000Z",
     "package_name": "phantom_mysql",
-    "main_module": "mysql_connector.pyc",
-    "min_phantom_version": "3.5.210",
+    "main_module": "mysql_connector.py",
+    "python_version": "3",
+    "min_phantom_version": "4.9.39220",
+    "latest_tested_versions": [
+        "MySQL v5.7.19"
+    ],
     "app_wizard_version": "1.0.0",
     "configuration": {
         "host": {
@@ -55,7 +59,6 @@
             "action": "test connectivity",
             "identifier": "test_connectivity",
             "description": "Validate the asset configuration for connectivity using supplied configuration",
-            "verbose": "",
             "type": "test",
             "read_only": true,
             "parameters": {},
@@ -68,7 +71,7 @@
             "description": "List the columns of a table",
             "verbose": "Describes the structure of a table in the database by displaying information about its columns. The only tables which it will be able to query for must have a name composed of only alphanumeric characters + '_' and '$'.",
             "type": "investigate",
-            "read_only": false,
+            "read_only": true,
             "parameters": {
                 "table_name": {
                     "description": "Name of table",
@@ -86,63 +89,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.Extra",
-                    "data_type": "string",
-                    "example_values": [
-                        "auto_increment"
-                    ],
-                    "column_name": "extra",
-                    "column_order": 4
-                },
-                {
-                    "data_path": "action_result.data.*.Field",
-                    "data_type": "string",
-                    "example_values": [
-                        "id"
-                    ],
-                    "column_name": "field",
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.data.*.Key",
-                    "data_type": "string",
-                    "example_values": [
-                        "PRI"
-                    ],
-                    "column_name": "key",
-                    "column_order": 2
-                },
-                {
-                    "data_path": "action_result.data.*.Null",
-                    "data_type": "string",
-                    "example_values": [
-                        "NO"
-                    ],
-                    "column_name": "null",
-                    "column_order": 3
-                },
-                {
-                    "data_path": "action_result.data.*.Type",
-                    "data_type": "string",
-                    "example_values": [
-                        "int(11)"
-                    ],
-                    "column_name": "type",
-                    "column_order": 1
-                },
-                {
-                    "data_path": "action_result.data.*.Default",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Total rows: 4"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -156,10 +104,66 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.data.*.Default",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.Extra",
+                    "data_type": "string",
+                    "example_values": [
+                        "auto_increment"
+                    ],
+                    "column_name": "Extra",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.Field",
+                    "data_type": "string",
+                    "example_values": [
+                        "id"
+                    ],
+                    "column_name": "Field",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.Key",
+                    "data_type": "string",
+                    "example_values": [
+                        "PRI"
+                    ],
+                    "column_name": "Key",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.Null",
+                    "data_type": "string",
+                    "example_values": [
+                        "NO"
+                    ],
+                    "column_name": "Null",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.Type",
+                    "data_type": "string",
+                    "example_values": [
+                        "int(11)"
+                    ],
+                    "column_name": "Type",
+                    "column_order": 1
+                },
+                {
                     "data_path": "action_result.summary.total_rows",
                     "data_type": "numeric",
                     "example_values": [
                         4
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 4"
                     ]
                 },
                 {
@@ -187,14 +191,15 @@
             "identifier": "list_tables",
             "description": "List the tables in the database",
             "type": "investigate",
-            "read_only": false,
+            "read_only": true,
             "parameters": {},
             "output": [
                 {
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -206,21 +211,21 @@
                     "contains": [
                         "mysql table name"
                     ],
-                    "column_name": "name",
+                    "column_name": "Name",
                     "column_order": 0
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Total rows: 1"
-                    ]
                 },
                 {
                     "data_path": "action_result.summary.total_rows",
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 1"
                     ]
                 },
                 {
@@ -264,14 +269,11 @@
                 "format_vars": {
                     "description": "Comma seperated list of variables",
                     "data_type": "string",
-                    "required": false,
-                    "primary": false,
                     "order": 1
                 },
                 "no_commit": {
                     "description": "Do not commit changes to database",
                     "data_type": "boolean",
-                    "required": false,
                     "default": false,
                     "order": 2
                 }
@@ -281,25 +283,8 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
-                    ]
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Total rows: 6"
-                    ]
-                },
-                {
-                    "data_path": "action_result.parameter.query",
-                    "data_type": "string",
-                    "contains": [
-                        "sql query"
-                    ],
-                    "example_values": [
-                        "select * from contact where first_name = 'Tony'",
-                        "select * from my_hosts where ip = %s"
+                        "success",
+                        "failed"
                     ]
                 },
                 {
@@ -314,10 +299,32 @@
                     "data_type": "boolean"
                 },
                 {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string",
+                    "contains": [
+                        "sql query"
+                    ],
+                    "example_values": [
+                        "select * from contact where first_name = 'Tony'",
+                        "select * from my_hosts where ip = %s"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.summary.total_rows",
                     "data_type": "numeric",
                     "example_values": [
                         6
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total rows: 6"
                     ]
                 },
                 {
@@ -333,10 +340,6 @@
                     "example_values": [
                         1
                     ]
-                },
-                {
-                    "data_path": "action_result.data.*",
-                    "data_type": "string"
                 }
             ],
             "render": {

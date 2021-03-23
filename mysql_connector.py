@@ -1,5 +1,5 @@
 # File: mysql_connector.py
-# Copyright (c) 2017-2018 Splunk Inc.
+# Copyright (c) 2017-2021 Splunk Inc.
 #
 # SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
 # without a valid written license from Splunk Inc. is PROHIBITED.
@@ -14,7 +14,7 @@ from phantom.action_result import ActionResult
 import re
 import csv
 import json
-import mysql.connector
+import pymysql
 
 
 class RetVal(tuple):
@@ -38,8 +38,9 @@ class MysqlConnector(BaseConnector):
         self._my_connection = None
 
     def _cleanup_row_values(self, row):
+
         # The MySQL column values is supposed to be a bytearray as opposed to a string
-        return {k: v.decode('utf-8') if type(v) == bytearray else v for k, v in row.iteritems()}
+        return {k: v.decode('utf-8') if isinstance(v, bytearray) else v for k, v in row.items()}
 
     def _handle_test_connectivity(self, param):
 
@@ -73,7 +74,7 @@ class MysqlConnector(BaseConnector):
         if not re.match(r'^[a-zA-Z0-9$_]+$', my_table):
             return action_result.set_status(phantom.APP_ERROR, "Table name did not pass validation")
         query = "DESCRIBE {0};".format(my_table)
-        cursor = self._my_connection.cursor(dictionary=True)
+        cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         try:
             cursor.execute(query)
         except Exception as e:
@@ -99,7 +100,7 @@ class MysqlConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         query = "SHOW TABLES;"
-        cursor = self._my_connection.cursor(dictionary=True)
+        cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(query)
         for row in cursor:
             row = self._cleanup_row_values(row)
@@ -107,7 +108,7 @@ class MysqlConnector(BaseConnector):
             #  running the app
             # There should only be one column per row, but let's double check first
             if len(row) == 1:
-                row = dict(table_name=next(row.itervalues()))
+                row = dict(table_name=next(iter(row.values())))
             action_result.add_data(row)
 
         summary = action_result.update_summary({})
@@ -118,7 +119,7 @@ class MysqlConnector(BaseConnector):
     def _get_format_vars(self, param):
         format_vars = param.get('format_vars')
         if format_vars:
-            format_vars = csv.reader([format_vars], quotechar='"', skipinitialspace=True, escapechar='\\').next()
+            format_vars = next(csv.reader([format_vars], quotechar='"', skipinitialspace=True, escapechar='\\'))
         return format_vars
 
     def _handle_run_query(self, param):
@@ -132,7 +133,7 @@ class MysqlConnector(BaseConnector):
         my_query = param.get('query')
         format_vars = self._get_format_vars(param)
 
-        cursor = self._my_connection.cursor(dictionary=True)
+        cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         try:
             cursor.execute(my_query, format_vars)
         except Exception as e:
@@ -203,12 +204,14 @@ class MysqlConnector(BaseConnector):
 
         self.save_progress("Starting db initialization")
         try:
-            self._my_connection = mysql.connector.connect(user=config['username'],
-                                                          password=config['password'],
-                                                          database=config['database'],
-                                                          host=config['host'])
+            self._my_connection = pymysql.connect(
+                                                user=config['username'],
+                                                password=config['password'],
+                                                database=config['database'],
+                                                host=config['host']
+                                            )
             # self._my_connection.autocommit = True
-        except mysql.connector.Error as err:
+        except pymysql.Error as err:
             if self.get_action_identifier() == "test_connectivity":
                 self.save_progress("db login error")
                 self.save_progress(str(err))
@@ -233,7 +236,7 @@ if __name__ == '__main__':
     pudb.set_trace()
 
     if (len(sys.argv) < 2):
-        print "No test json specified as input"
+        print("No test json specified as input")
         exit(0)
 
     with open(sys.argv[1]) as f:
@@ -244,6 +247,6 @@ if __name__ == '__main__':
         connector = MysqlConnector()
         connector.print_progress_message = True
         ret_val = connector._handle_action(json.dumps(in_json), None)
-        print (json.dumps(json.loads(ret_val), indent=4))
+        print(json.dumps(json.loads(ret_val), indent=4))
 
     exit(0)
