@@ -9,12 +9,12 @@ import phantom.app as phantom
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
 
-# Usage of the consts file is recommended
-# from mysql_consts import *
+from mysql_consts import *
 import re
 import csv
 import json
 import pymysql
+import datetime
 
 
 class RetVal(tuple):
@@ -37,10 +37,39 @@ class MysqlConnector(BaseConnector):
         self._base_url = None
         self._my_connection = None
 
+    def _get_error_message_from_exception(self, e):
+        """ This method is used to get appropriate error message from the exception.
+        :param e: Exception object
+        :return: error message
+        """
+
+        error_code = MYSQL_ERR_CODE_UNAVAILABLE
+        error_msg = MYSQL_ERR_MSG_UNAVAILABLE
+
+        try:
+            if e.args:
+                if len(e.args) > 1:
+                    error_code = e.args[0]
+                    error_msg = e.args[1]
+                elif len(e.args) == 1:
+                    error_msg = e.args[0]
+        except:
+            pass
+
+        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+
+    def convert_value(self, value):
+        if isinstance(value, (bytearray, bytes)):
+            return value.decode('utf-8')
+        elif isinstance(value, (datetime.datetime, datetime.timedelta, datetime.date)):
+            return str(value)
+        else:
+            return value
+
     def _cleanup_row_values(self, row):
 
         # The MySQL column values is supposed to be a bytearray as opposed to a string
-        return {k: v.decode('utf-8') if isinstance(v, bytearray) else v for k, v in row.items()}
+        return {k: self.convert_value(v) for k, v in row.items()}
 
     def _handle_test_connectivity(self, param):
 
@@ -48,58 +77,55 @@ class MysqlConnector(BaseConnector):
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        self.save_progress("Testing database connection")
+        self.save_progress(MYSQL_TEST_DB_CONNECTION_MSG)
         cursor = self._my_connection.cursor()
 
-        query = ("SELECT version()")
+        query = MYSQL_VERSION_QUERY
 
         cursor.execute(query)
         if cursor:
-            self.save_progress("Test Connectivity Passed")
+            self.save_progress(MYSQL_TEST_CONNECTIVITY_SUCC)
             return action_result.set_status(phantom.APP_SUCCESS)
         else:
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "Connection failed")
+            return action_result.set_status(phantom.APP_ERROR, MYSQL_DB_CONNECTION_ERR)
 
     def _handle_list_columns(self, param):
 
-        self.save_progress("In action handler for: {0}".format(
-            self.get_action_identifier()))
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        my_table = param['table_name']
+        my_table = param[MYSQL_TABLE_NAME_JSON]
         if not re.match(r'^[a-zA-Z0-9$_]+$', my_table):
-            return action_result.set_status(phantom.APP_ERROR, "Table name did not pass validation")
-        query = "DESCRIBE {0};".format(my_table)
+            return action_result.set_status(phantom.APP_ERROR, MYSQL_INVALID_TABLE_NAME_ERR)
+
+        query = MYSQL_DESCRIBE_TABLE_QUERY.format(my_table)
         cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         try:
             cursor.execute(query)
         except Exception as e:
-            return action_result.set_status(
-                phantom.APP_ERROR, "Unable to list columns", e
-            )
+            error_msg = self._get_error_message_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, MYSQL_COLUMN_LIST_ERR.format(error_msg))
 
         for row in cursor:
             action_result.add_data(self._cleanup_row_values(row))
 
         summary = action_result.update_summary({})
-        summary['total_rows'] = cursor.rowcount
+        summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tables(self, param):
 
-        self.save_progress("In action handler for: {0}".format(
-            self.get_action_identifier()))
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        query = "SHOW TABLES;"
+        query = MYSQL_SHOW_TABLE_QUERY
         cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(query)
         for row in cursor:
@@ -112,55 +138,52 @@ class MysqlConnector(BaseConnector):
             action_result.add_data(row)
 
         summary = action_result.update_summary({})
-        summary['total_rows'] = cursor.rowcount
+        summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_format_vars(self, param):
-        format_vars = param.get('format_vars')
+        format_vars = param.get(MYSQL_FORMAT_VARS_JSON)
         if format_vars:
             format_vars = next(csv.reader([format_vars], quotechar='"', skipinitialspace=True, escapechar='\\'))
         return format_vars
 
     def _handle_run_query(self, param):
-        self.save_progress("In action handler for: {0}".format(
-            self.get_action_identifier()))
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        my_query = param.get('query')
+        my_query = param.get(MYSQL_QUERY_JSON)
         format_vars = self._get_format_vars(param)
 
         cursor = self._my_connection.cursor(pymysql.cursors.DictCursor)
         try:
             cursor.execute(my_query, format_vars)
         except Exception as e:
-            return action_result.set_status(
-                phantom.APP_ERROR, "Unable to run query", e
-            )
+            error_msg = self._get_error_message_from_exception(e)
+            return action_result.set_status(phantom.APP_ERROR, MYSQL_RUN_QUERY_ERR.format(error_msg))
 
         for row in cursor:
             action_result.add_data(self._cleanup_row_values(row))
 
-        if not param.get('no_commit', False):
+        if not param.get(MYSQL_NO_COMMIT_JSON, False):
             try:
                 self._my_connection.commit()
             except Exception as e:
-                return action_result.set_status(
-                    phantom.APP_ERROR, "Unable to commit changes", e
-                )
+                error_msg = self._get_error_message_from_exception(e)
+                return action_result.set_status(phantom.APP_ERROR, MYSQL_DB_COMMIT_ERR.format(error_msg))
 
         summary = action_result.update_summary({})
 
         # cursor.rowcount returns -1 if no rows returned
         if cursor.rowcount > 0:
-            summary['total_rows'] = cursor.rowcount
+            summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
         else:
-            summary['total_rows'] = 0
+            summary[MYSQL_TOTAL_ROWS_JSON] = 0
 
-        return action_result.set_status(phantom.APP_SUCCESS, "Successfully ran query")
+        return action_result.set_status(phantom.APP_SUCCESS, MYSQL_RUN_QUERY_SUCC)
 
     def handle_action(self, param):
 
@@ -171,16 +194,16 @@ class MysqlConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
+        if action_id == MYSQL_TEST_CONNECTIVITY_ACTION:
             ret_val = self._handle_test_connectivity(param)
 
-        elif action_id == 'list_columns':
+        elif action_id == MYSQL_LIST_COLUMNS_ACTION:
             ret_val = self._handle_list_columns(param)
 
-        elif action_id == 'list_tables':
+        elif action_id == MYSQL_LIST_TABLES_ACTION:
             ret_val = self._handle_list_tables(param)
 
-        elif action_id == 'run_query':
+        elif action_id == MYSQL_RUN_QUERY_ACTION:
             ret_val = self._handle_run_query(param)
 
         return ret_val
@@ -194,32 +217,25 @@ class MysqlConnector(BaseConnector):
         # get the asset config
         config = self.get_config()
 
-        # Access values in asset config by the name
-
-        # Required values can be accessed directly
-        # required_config_name = config['required_config_name']
-
-        # Optional values should use the .get() function
-        # optional_config_name = config.get('optional_config_name')
-
-        self.save_progress("Starting db initialization")
+        self.save_progress(MYSQL_INIT_DB_CONNECTION_MSG)
         try:
             self._my_connection = pymysql.connect(
-                                                user=config['username'],
-                                                password=config['password'],
-                                                database=config['database'],
-                                                host=config['host']
+                                                user=config[MYSQL_USERNAME_JSON],
+                                                password=config[MYSQL_PASSWORD_JSON],
+                                                database=config[MYSQL_DATABASE_JSON],
+                                                host=config[MYSQL_HOST_JSON]
                                             )
             # self._my_connection.autocommit = True
-        except pymysql.Error as err:
-            if self.get_action_identifier() == "test_connectivity":
-                self.save_progress("db login error")
-                self.save_progress(str(err))
-                self.set_status(phantom.APP_ERROR, "Test Connectivity Failed")
+        except pymysql.Error as e:
+            error_msg = self._get_error_message_from_exception(e)
+            if self.get_action_identifier() == MYSQL_TEST_CONNECTIVITY_ACTION:
+                self.save_progress(MYSQL_DB_LOGIN_ERR.format(error_msg))
+                self.set_status(phantom.APP_ERROR, MYSQL_TEST_CONNECTIVITY_ERR)
             else:
-                self.set_status(phantom.APP_ERROR, "db login error", err)
-            return False
-        self.save_progress("Database connection established")
+                self.set_status(phantom.APP_ERROR, MYSQL_DB_LOGIN_ERR.format(error_msg))
+            return phantom.APP_ERROR
+        self.save_progress(MYSQL_DB_CONNECTION_SUCC)
+
         return phantom.APP_SUCCESS
 
     def finalize(self):
@@ -235,7 +251,7 @@ if __name__ == '__main__':
     import pudb
     pudb.set_trace()
 
-    if (len(sys.argv) < 2):
+    if len(sys.argv) < 2:
         print("No test json specified as input")
         exit(0)
 
