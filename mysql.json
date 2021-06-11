@@ -18,8 +18,8 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) 2017-2021 Splunk Inc.",
-    "app_version": "2.0.4",
-    "utctime_updated": "2021-03-23T05:20:32.000000Z",
+    "app_version": "2.1.2",
+    "utctime_updated": "2021-06-11T01:02:03.000000Z",
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.py",
     "python_version": "3",
@@ -105,7 +105,10 @@
                 },
                 {
                     "data_path": "action_result.data.*.Default",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "Default Value"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.Extra",
@@ -296,7 +299,11 @@
                 },
                 {
                     "data_path": "action_result.parameter.no_commit",
-                    "data_type": "boolean"
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.query",
@@ -305,7 +312,6 @@
                         "sql query"
                     ],
                     "example_values": [
-                        "select * from contact where first_name = 'Tony'",
                         "select * from my_hosts where ip = %s"
                     ]
                 },
