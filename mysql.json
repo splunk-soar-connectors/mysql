@@ -23,7 +23,8 @@
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.py",
     "python_version": "3",
-    "min_phantom_version": "4.9.39220",
+    "min_phantom_version": "5.0.0",
+    "fips_compliant": true,
     "latest_tested_versions": [
         "MySQL v5.7.19"
     ],
