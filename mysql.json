@@ -9,8 +9,8 @@
     "pip_dependencies": {
         "wheel": [
             {
-                "module": "pymysql",
-                "input_file": "mysql_python/PyMySQL-1.0.2.tar.gz"
+                "module": "PyMySQL",
+                "input_file": "wheels/PyMySQL-1.0.2-py3-none-any.whl"
             }
         ]
     },
