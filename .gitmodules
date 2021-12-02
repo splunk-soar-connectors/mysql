@@ -1,4 +1,0 @@
-[submodule "mysql_python"]
-	path = mysql_python
-	url = git@cd.splunkdev.com:phantom-external/mysql_python.git
-	ignore = dirty
