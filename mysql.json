@@ -17,13 +17,14 @@
     "product_name": "MySQL",
     "product_version_regex": ".*",
     "publisher": "Splunk",
-    "license": "Copyright (c) 2017-2021 Splunk Inc.",
+    "license": "Copyright (c) 2017-2022 Splunk Inc.",
     "app_version": "2.1.3",
     "utctime_updated": "2022-01-07T21:54:09.000000Z",
     "package_name": "phantom_mysql",
     "main_module": "mysql_connector.py",
     "python_version": "3",
     "min_phantom_version": "4.9.39220",
+    "fips_compliant": true,
     "latest_tested_versions": [
         "MySQL v5.7.19"
     ],

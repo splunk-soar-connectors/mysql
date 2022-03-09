@@ -15,16 +15,17 @@
 #
 #
 # Phantom App imports
+import csv
+import datetime
+import json
+import re
+
 import phantom.app as phantom
-from phantom.base_connector import BaseConnector
+import pymysql
 from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 from mysql_consts import *
-import re
-import csv
-import json
-import pymysql
-import datetime
 
 
 class RetVal(tuple):
@@ -258,6 +259,7 @@ class MysqlConnector(BaseConnector):
 if __name__ == '__main__':
 
     import sys
+
     import pudb
     pudb.set_trace()
 
