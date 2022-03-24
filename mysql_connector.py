@@ -118,6 +118,7 @@ class MysqlConnector(BaseConnector):
             cursor.execute(query)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
+            self.save_progress("Error: {}".format(error_msg))
             return action_result.set_status(phantom.APP_ERROR, MYSQL_COLUMN_LIST_ERR.format(error_msg))
 
         for row in cursor:
@@ -126,6 +127,7 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tables(self, param):
@@ -151,6 +153,7 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_format_vars(self, param):
@@ -174,6 +177,7 @@ class MysqlConnector(BaseConnector):
             cursor.execute(my_query, format_vars)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
+            self.save_progress("Error: {}".format(error_msg))
             return action_result.set_status(phantom.APP_ERROR, MYSQL_RUN_QUERY_ERR.format(error_msg))
 
         for row in cursor:
@@ -184,6 +188,7 @@ class MysqlConnector(BaseConnector):
                 self._my_connection.commit()
             except Exception as e:
                 error_msg = self._get_error_message_from_exception(e)
+                self.save_progress("Error: {}".format(error_msg))
                 return action_result.set_status(phantom.APP_ERROR, MYSQL_DB_COMMIT_ERR.format(error_msg))
 
         summary = action_result.update_summary({})
@@ -194,6 +199,7 @@ class MysqlConnector(BaseConnector):
         else:
             summary[MYSQL_TOTAL_ROWS_JSON] = 0
 
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS, MYSQL_RUN_QUERY_SUCC)
 
     def handle_action(self, param):
@@ -265,7 +271,7 @@ if __name__ == '__main__':
 
     if len(sys.argv) < 2:
         print("No test json specified as input")
-        exit(0)
+        sys.exit(0)
 
     with open(sys.argv[1]) as f:
         in_json = f.read()
@@ -277,4 +283,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)
