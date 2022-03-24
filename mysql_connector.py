@@ -127,7 +127,7 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier()), phantom.APP_SUCCESS)
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tables(self, param):
@@ -153,7 +153,7 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier()), phantom.APP_SUCCESS)
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_format_vars(self, param):
@@ -199,7 +199,7 @@ class MysqlConnector(BaseConnector):
         else:
             summary[MYSQL_TOTAL_ROWS_JSON] = 0
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier()), phantom.APP_SUCCESS)
+        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
         return action_result.set_status(phantom.APP_SUCCESS, MYSQL_RUN_QUERY_SUCC)
 
     def handle_action(self, param):
