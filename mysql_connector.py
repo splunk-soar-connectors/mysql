@@ -1,6 +1,6 @@
 # File: mysql_connector.py
 #
-# Copyright (c) 2017-2022 Splunk Inc.
+# Copyright (c) 2017-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,11 +34,9 @@ class RetVal(tuple):
 
 
 class MysqlConnector(BaseConnector):
-
     def __init__(self):
-
         # Call the BaseConnectors init first
-        super(MysqlConnector, self).__init__()
+        super().__init__()
 
         self._state = None
 
@@ -49,7 +47,7 @@ class MysqlConnector(BaseConnector):
         self._my_connection = None
 
     def _get_error_message_from_exception(self, e):
-        """ This method is used to get appropriate error message from the exception.
+        """This method is used to get appropriate error message from the exception.
         :param e: Exception object
         :return: error message
         """
@@ -67,23 +65,21 @@ class MysqlConnector(BaseConnector):
         except:
             pass
 
-        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+        return f"Error Code: {error_code}. Error Message: {error_msg}"
 
     def convert_value(self, value):
         if isinstance(value, (bytearray, bytes)):
-            return value.decode('utf-8')
+            return value.decode("utf-8")
         elif isinstance(value, (datetime.datetime, datetime.timedelta, datetime.date)):
             return str(value)
         else:
             return value
 
     def _cleanup_row_values(self, row):
-
         # The MySQL column values is supposed to be a bytearray as opposed to a string
         return {k: self.convert_value(v) for k, v in row.items()}
 
     def _handle_test_connectivity(self, param):
-
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -101,15 +97,14 @@ class MysqlConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, MYSQL_DB_CONNECTION_ERR)
 
     def _handle_list_columns(self, param):
-
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         my_table = param[MYSQL_TABLE_NAME_JSON]
-        if not re.match(r'^[a-zA-Z0-9$_]+$', my_table):
+        if not re.match(r"^[a-zA-Z0-9$_]+$", my_table):
             return action_result.set_status(phantom.APP_ERROR, MYSQL_INVALID_TABLE_NAME_ERR)
 
         query = MYSQL_DESCRIBE_TABLE_QUERY.format(my_table)
@@ -118,7 +113,7 @@ class MysqlConnector(BaseConnector):
             cursor.execute(query)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            self.save_progress("Error: {}".format(error_msg))
+            self.save_progress(f"Error: {error_msg}")
             return action_result.set_status(phantom.APP_ERROR, MYSQL_COLUMN_LIST_ERR.format(error_msg))
 
         for row in cursor:
@@ -127,12 +122,11 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
+        self.save_progress(f"Action: {self.get_action_identifier()} - Status: {phantom.APP_SUCCESS}")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tables(self, param):
-
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
@@ -153,17 +147,17 @@ class MysqlConnector(BaseConnector):
         summary = action_result.update_summary({})
         summary[MYSQL_TOTAL_ROWS_JSON] = cursor.rowcount
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
+        self.save_progress(f"Action: {self.get_action_identifier()} - Status: {phantom.APP_SUCCESS}")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_format_vars(self, param):
         format_vars = param.get(MYSQL_FORMAT_VARS_JSON)
         if format_vars:
-            format_vars = next(csv.reader([format_vars], quotechar='"', skipinitialspace=True, escapechar='\\'))
+            format_vars = next(csv.reader([format_vars], quotechar='"', skipinitialspace=True, escapechar="\\"))
         return format_vars
 
     def _handle_run_query(self, param):
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         # Add an action result object to self (BaseConnector)
         # to represent the action for this param
@@ -177,7 +171,7 @@ class MysqlConnector(BaseConnector):
             cursor.execute(my_query, format_vars)
         except Exception as e:
             error_msg = self._get_error_message_from_exception(e)
-            self.save_progress("Error: {}".format(error_msg))
+            self.save_progress(f"Error: {error_msg}")
             return action_result.set_status(phantom.APP_ERROR, MYSQL_RUN_QUERY_ERR.format(error_msg))
 
         for row in cursor:
@@ -188,7 +182,7 @@ class MysqlConnector(BaseConnector):
                 self._my_connection.commit()
             except Exception as e:
                 error_msg = self._get_error_message_from_exception(e)
-                self.save_progress("Error: {}".format(error_msg))
+                self.save_progress(f"Error: {error_msg}")
                 return action_result.set_status(phantom.APP_ERROR, MYSQL_DB_COMMIT_ERR.format(error_msg))
 
         summary = action_result.update_summary({})
@@ -199,11 +193,10 @@ class MysqlConnector(BaseConnector):
         else:
             summary[MYSQL_TOTAL_ROWS_JSON] = 0
 
-        self.save_progress("Action: {0} - Status: {1}".format(self.get_action_identifier(), phantom.APP_SUCCESS))
+        self.save_progress(f"Action: {self.get_action_identifier()} - Status: {phantom.APP_SUCCESS}")
         return action_result.set_status(phantom.APP_SUCCESS, MYSQL_RUN_QUERY_SUCC)
 
     def handle_action(self, param):
-
         ret_val = phantom.APP_SUCCESS
 
         # Get the action that we are supposed to execute for this App Run
@@ -226,7 +219,6 @@ class MysqlConnector(BaseConnector):
         return ret_val
 
     def initialize(self):
-
         # Load the state in initialize, use it to store data
         # that needs to be accessed across actions
         self._state = self.load_state()
@@ -237,11 +229,11 @@ class MysqlConnector(BaseConnector):
         self.save_progress(MYSQL_INIT_DB_CONNECTION_MSG)
         try:
             self._my_connection = pymysql.connect(
-                                                user=config[MYSQL_USERNAME_JSON],
-                                                password=config[MYSQL_PASSWORD_JSON],
-                                                database=config[MYSQL_DATABASE_JSON],
-                                                host=config[MYSQL_HOST_JSON]
-                                            )
+                user=config[MYSQL_USERNAME_JSON],
+                password=config[MYSQL_PASSWORD_JSON],
+                database=config[MYSQL_DATABASE_JSON],
+                host=config[MYSQL_HOST_JSON],
+            )
             # self._my_connection.autocommit = True
         except pymysql.Error as e:
             error_msg = self._get_error_message_from_exception(e)
@@ -256,17 +248,16 @@ class MysqlConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def finalize(self):
-
         # Save the state, this data is saved accross actions and app upgrades
         self.save_state(self._state)
         return phantom.APP_SUCCESS
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     import sys
 
     import pudb
+
     pudb.set_trace()
 
     if len(sys.argv) < 2:
