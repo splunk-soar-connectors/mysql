@@ -1,6 +1,6 @@
 # File: mysql_consts.py
 #
-# Copyright (c) 2017-2022 Splunk Inc.
+# Copyright (c) 2017-2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ MYSQL_FORMAT_VARS_JSON = "format_vars"
 MYSQL_QUERY_JSON = "query"
 MYSQL_NO_COMMIT_JSON = "no_commit"
 MYSQL_USERNAME_JSON = "username"
-MYSQL_PASSWORD_JSON = "password"
+MYSQL_PASSWORD_JSON = "password"  # pragma: allowlist secret
 MYSQL_DATABASE_JSON = "database"
 MYSQL_HOST_JSON = "host"
 MYSQL_TOTAL_ROWS_JSON = "total_rows"
