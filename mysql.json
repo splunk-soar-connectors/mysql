@@ -10,7 +10,7 @@
         "wheel": [
             {
                 "module": "PyMySQL",
-                "input_file": "wheels/PyMySQL-1.0.2-py3-none-any.whl"
+                "input_file": "wheels/py3/PyMySQL-1.0.2-py3-none-any.whl"
             }
         ]
     },
