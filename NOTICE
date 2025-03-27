@@ -1,9 +1,9 @@
 Splunk SOAR MySQL
-Copyright (c) 2017-2022 Splunk Inc.
+Copyright (c) 2017-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: PyMySQL
+Name: PyMySQL
 Version: 1.0.2
-License: MIT
-Copyright 2010-2013 PyMySQL contributors
+Author: yutaka.matsubara
+License: "MIT"
