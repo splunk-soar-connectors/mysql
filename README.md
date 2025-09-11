@@ -1,9 +1,9 @@
 # MySQL
 
-Publisher: Splunk \
-Connector Version: 2.1.8 \
-Product Vendor: Oracle Corporation \
-Product Name: MySQL \
+Publisher: Splunk <br>
+Connector Version: 2.1.8 <br>
+Product Vendor: Oracle Corporation <br>
+Product Name: MySQL <br>
 Minimum Product Version: 5.1.0
 
 This app supports investigative actions against a MySQL database
@@ -21,16 +21,16 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration \
-[list columns](#action-list-columns) - List the columns of a table \
-[list tables](#action-list-tables) - List the tables in the database \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity using supplied configuration <br>
+[list columns](#action-list-columns) - List the columns of a table <br>
+[list tables](#action-list-tables) - List the tables in the database <br>
 [run query](#action-run-query) - Run a query against a table or tables in the database
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity using supplied configuration
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -45,7 +45,7 @@ No Output
 
 List the columns of a table
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 Describes the structure of a table in the database by displaying information about its columns. The only tables which it will be able to query for must have a name composed of only alphanumeric characters + '\_' and '$'.
@@ -77,7 +77,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List the tables in the database
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -99,7 +99,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Run a query against a table or tables in the database
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **False**
 
 It is recommended to use the <b>format_vars</b> parameter when applicable. For example, if you wanted to find a specific IP, you could set <b>query</b> to a formatted string, like "select * from my_hosts where ip = %s" (note the use of %s), and set <b>format_vars</b> to the IP address. This will ensure the inputs are safely sanitized and avoid SQL injection attacks. Regardless of the type of input it's expecting, the only format specifier which should be used is %s.<br>Setting <b>no_commit</b> will make it so the App does not commit any changes made to the DB (So, you can ensure its a run only query). However, many statements on MySQL will implicitly commit (as can be read about <a href="https://dev.mysql.com/doc/refman/5.6/en/implicit-commit.html">here</a>) meaning that this parameter will have no effect in cases where these statements are used.<br><br>The <b>format_vars</b> parameter accepts a comma seperated list. You can escape commas by surrounding them in double quotes, and escape double quotes with a backslash. Assuming you have a list of values for the format vars, you can employ this code in your playbooks to properly format it into a string:<br> <code>format_vars_str = ','.join(['"{}"'.format(str(x).replace('\\\\', '\\\\\\\\').replace('"', '\\\\"')) for x in format_vars_list])</code>.
