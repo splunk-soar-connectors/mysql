@@ -354,8 +354,16 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "PyMySQL",
-                "input_file": "wheels/py3/PyMySQL-1.0.2-py3-none-any.whl"
+                "module": "pymysql",
+                "input_file": "wheels/py3/pymysql-1.1.2-py3-none-any.whl"
+            }
+        ]
+    },
+    "pip313_dependencies": {
+        "wheel": [
+            {
+                "module": "pymysql",
+                "input_file": "wheels/py3/pymysql-1.1.2-py3-none-any.whl"
             }
         ]
     }
