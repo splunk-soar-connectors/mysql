@@ -6,7 +6,7 @@ Third Party Software Attributions:
 
 Library: PyMySQL - 1.1.2
 Homepage: https://github.com/PyMySQL/PyMySQL/blob/main/CHANGELOG.md
-License: UNKNOWN
+License: MIT
 License Text:
 
 Copyright (c) 2010, 2013 PyMySQL contributors
