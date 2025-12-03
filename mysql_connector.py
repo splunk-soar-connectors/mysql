@@ -228,11 +228,16 @@ class MysqlConnector(BaseConnector):
 
         self.save_progress(MYSQL_INIT_DB_CONNECTION_MSG)
         try:
+            # Disable SSL certificate verification to avoid issues with self-signed certs
+            # and Python 3.13's stricter SSL/TLS defaults
+            ssl_config = {"ssl_verify_cert": False, "ssl_verify_identity": False}
+
             self._my_connection = pymysql.connect(
                 user=config[MYSQL_USERNAME_JSON],
                 password=config[MYSQL_PASSWORD_JSON],
                 database=config[MYSQL_DATABASE_JSON],
                 host=config[MYSQL_HOST_JSON],
+                ssl=ssl_config,
             )
             # self._my_connection.autocommit = True
         except pymysql.Error as e:
