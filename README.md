@@ -18,6 +18,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **username** | required | string | Username |
 **password** | required | password | Password |
 **database** | required | string | Database Name |
+**verify_ssl** | optional | boolean | Verify server certificate |
 
 ### Supported Actions
 

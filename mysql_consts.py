@@ -24,6 +24,7 @@ MYSQL_USERNAME_JSON = "username"
 MYSQL_PASSWORD_JSON = "password"  # pragma: allowlist secret
 MYSQL_DATABASE_JSON = "database"
 MYSQL_HOST_JSON = "host"
+MYSQL_VERIFY_SERVER_CERT_JSON = "verify_ssl"
 MYSQL_TOTAL_ROWS_JSON = "total_rows"
 
 # Queries
