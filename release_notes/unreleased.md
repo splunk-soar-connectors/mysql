@@ -1,1 +1,3 @@
 **Unreleased**
+* Update Python version for 3.13
+* Add explicit support for ssl certificates due to stricter ssl controls in Python 3.13
