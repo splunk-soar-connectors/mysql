@@ -229,9 +229,8 @@ class MysqlConnector(BaseConnector):
         self.save_progress(MYSQL_INIT_DB_CONNECTION_MSG)
         try:
             # Configure SSL certificate verification based on asset setting
-            # Defaults to False for backward compatibility with self-signed certificates
-            # Python 3.13 has stricter SSL/TLS defaults, so explicit configuration is required
-            verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, False)
+            # Require an explicit opt-out for deployments that use untrusted certificates.
+            verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, True)
             self._my_connection = pymysql.connect(
                 user=config[MYSQL_USERNAME_JSON],
                 password=config[MYSQL_PASSWORD_JSON],

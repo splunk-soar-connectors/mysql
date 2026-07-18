@@ -48,8 +48,8 @@
         },
         "verify_ssl": {
             "data_type": "boolean",
-            "description": "Verify server certificate",
-            "default": false,
+            "description": "Verify the server certificate. Disabling verification exposes database credentials and query results to network attackers.",
+            "default": true,
             "order": 4
         }
     },
