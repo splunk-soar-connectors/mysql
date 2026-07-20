@@ -1,7 +1,7 @@
 # MySQL
 
 Publisher: Splunk <br>
-Connector Version: 2.1.9 <br>
+Connector Version: 3.0.0 <br>
 Product Vendor: Oracle Corporation <br>
 Product Name: MySQL <br>
 Minimum Product Version: 5.1.0
