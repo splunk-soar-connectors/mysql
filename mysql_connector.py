@@ -1,6 +1,6 @@
 # File: mysql_connector.py
 #
-# Copyright (c) 2017-2025 Splunk Inc.
+# Copyright (c) 2017-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -229,17 +229,17 @@ class MysqlConnector(BaseConnector):
         self.save_progress(MYSQL_INIT_DB_CONNECTION_MSG)
         try:
             # Configure SSL certificate verification based on asset setting
-            # Defaults to False for backward compatibility with self-signed certificates
-            # Python 3.13 has stricter SSL/TLS defaults, so explicit configuration is required
-            verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, False)
-            ssl_config = {"ssl_verify_cert": verify_ssl, "ssl_verify_identity": verify_ssl}
-
+            # Require an explicit opt-out for deployments that use untrusted certificates.
+            verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, True)
             self._my_connection = pymysql.connect(
                 user=config[MYSQL_USERNAME_JSON],
                 password=config[MYSQL_PASSWORD_JSON],
                 database=config[MYSQL_DATABASE_JSON],
                 host=config[MYSQL_HOST_JSON],
-                ssl=ssl_config,
+                # Preserve encrypted transport for an explicit verification opt-out.
+                ssl={"ca": None},
+                ssl_verify_cert=verify_ssl,
+                ssl_verify_identity=verify_ssl,
             )
             # self._my_connection.autocommit = True
         except pymysql.Error as e:

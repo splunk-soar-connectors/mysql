@@ -18,7 +18,7 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 **username** | required | string | Username |
 **password** | required | password | Password |
 **database** | required | string | Database Name |
-**verify_ssl** | optional | boolean | Verify server certificate |
+**verify_ssl** | optional | boolean | Verify the server certificate. Disabling verification exposes database credentials and query results to network attackers. |
 
 ### Supported Actions
 
@@ -131,7 +131,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
