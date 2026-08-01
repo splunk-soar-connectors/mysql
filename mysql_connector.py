@@ -233,7 +233,7 @@ class MysqlConnector(BaseConnector):
             # Require an explicit opt-out for deployments that use untrusted certificates.
             verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, True)
             ssl_context = ssl.create_default_context()
-            if not verify_ssl:
+            if verify_ssl is False:
                 ssl_context.check_hostname = False
                 ssl_context.verify_mode = ssl.CERT_NONE
             self._my_connection = pymysql.connect(
