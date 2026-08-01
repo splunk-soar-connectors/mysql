@@ -27,6 +27,7 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
 from mysql_consts import *
+from mysql_tls import TlsRequiredConnection
 
 
 class RetVal(tuple):
@@ -236,7 +237,7 @@ class MysqlConnector(BaseConnector):
             if verify_ssl is False:
                 ssl_context.check_hostname = False
                 ssl_context.verify_mode = ssl.CERT_NONE
-            self._my_connection = pymysql.connect(
+            self._my_connection = TlsRequiredConnection(
                 user=config[MYSQL_USERNAME_JSON],
                 password=config[MYSQL_PASSWORD_JSON],
                 database=config[MYSQL_DATABASE_JSON],
