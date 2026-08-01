@@ -19,6 +19,7 @@ import csv
 import datetime
 import json
 import re
+import ssl
 
 import phantom.app as phantom
 import pymysql
@@ -231,15 +232,16 @@ class MysqlConnector(BaseConnector):
             # Configure SSL certificate verification based on asset setting
             # Require an explicit opt-out for deployments that use untrusted certificates.
             verify_ssl = config.get(MYSQL_VERIFY_SERVER_CERT_JSON, True)
+            ssl_context = ssl.create_default_context()
+            if not verify_ssl:
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
             self._my_connection = pymysql.connect(
                 user=config[MYSQL_USERNAME_JSON],
                 password=config[MYSQL_PASSWORD_JSON],
                 database=config[MYSQL_DATABASE_JSON],
                 host=config[MYSQL_HOST_JSON],
-                # Preserve encrypted transport for an explicit verification opt-out.
-                ssl={"ca": None},
-                ssl_verify_cert=verify_ssl,
-                ssl_verify_identity=verify_ssl,
+                ssl=ssl_context,
             )
             # self._my_connection.autocommit = True
         except pymysql.Error as e:
